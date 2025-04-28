@@ -236,7 +236,6 @@ SOCIALACCOUNT_LOGIN_ON_GET = True
 ACCOUNT_ADAPTER = "login.adapters.MyAccountAdapter"
 SOCIALACCOUNT_ADAPTER = "allauth.socialaccount.adapter.DefaultSocialAccountAdapter"
 
-
 LOGIN_REDIRECT_URL = "/redirect-after-login"
 LOGOUT_REDIRECT_URL = "/"
 
