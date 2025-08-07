@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Librarian Dashboard{% endblock %}
+
+{% block content %}
+<div class="dashboard-container" style="max-width: 800px; margin: 50px auto; padding: 30px;">
+  <div style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border-radius: 12px; padding: 30px; margin-bottom: 30px; border: 1px solid rgba(255, 255, 255, 0.2);">
+    <div style="text-align: center;">
+      {% if user.profile.profile_picture %}
+        <img src="{{ user.profile.profile_picture.url }}" alt="{{ user.username }} profile" style="width:150px; height:150px; object-fit:cover; border-radius: 50%; margin-bottom: 20px;">
+      {% endif %}
+      <h2 style="color: #fff; margin-bottom: 10px;">Welcome, {{ user.username|title }}! <small style="color: #a5b4fc;">(Librarian)</small></h2>
+      <p style="color: #a5b4fc;">Email: {{ user.email }}</p>
+    </div>
+  </div>
+
+  <h3 style="color: #fff; margin-bottom: 20px;">Dashboard</h3>
+  <div style="display: grid; gap: 15px; margin-bottom: 30px;">
+    <a href="{% url 'view_items' %}" style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); padding: 15px 20px; border-radius: 8px; color: #fff; text-decoration: none; border: 1px solid rgba(255, 255, 255, 0.2); transition: all 0.3s;">
+      📚 Manage Items
+    </a>
+    <a href="{% url 'view_collections' %}" style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); padding: 15px 20px; border-radius: 8px; color: #fff; text-decoration: none; border: 1px solid rgba(255, 255, 255, 0.2); transition: all 0.3s;">
+      📂 Manage Collections
+    </a>
+    <a href="{% url 'view_borrow_requests' %}" style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); padding: 15px 20px; border-radius: 8px; color: #fff; text-decoration: none; border: 1px solid rgba(255, 255, 255, 0.2); transition: all 0.3s;">
+      ✅ Approve Borrow Requests
+    </a>
+    <a href="{% url 'librarian_requests' %}" style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); padding: 15px 20px; border-radius: 8px; color: #fff; text-decoration: none; border: 1px solid rgba(255, 255, 255, 0.2); transition: all 0.3s;">
+      🔼 Upgrade Patrons to Librarians
+    </a>
+  </div>
+
+  <div style="text-align: center;">
+    <a href="{% url 'logout' %}" style="display: inline-block; padding: 12px 24px; background: rgba(255, 255, 255, 0.1); color: #fff; text-decoration: none; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.2); transition: all 0.3s;">
+      Logout
+    </a>
+  </div>
+</div>
+{% endblock %}

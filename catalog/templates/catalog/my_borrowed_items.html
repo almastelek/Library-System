@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}My Borrowed Items{% endblock %}
+
+{% block content %}
+<div class="dashboard-container" style="max-width: 800px; margin: 50px auto; padding: 30px;">
+  {% if user.is_authenticated %}
+    <div style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border-radius: 12px; padding: 30px; margin-bottom: 30px; border: 1px solid rgba(255, 255, 255, 0.2);">
+      <h1 style="color: #fff; text-align: center; margin-bottom: 20px;">📚 My Borrowed Items</h1>
+      <p style="color: #a5b4fc; text-align: center; margin-bottom: 30px;">Hello, {{ user.username }}! Here are the items you are currently borrowing:</p>
+
+      {% if reviews_by_item %}
+        <div style="margin-bottom: 30px;">
+          <h2 style="color: #fff; margin-bottom: 20px;">Your Reviews</h2>
+          <div style="display: grid; gap: 15px;">
+            {% for item_id, review in reviews_by_item.items %}
+              <div style="background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1);">
+                <h3 style="color: #fff; margin: 0 0 10px 0;">{{ review.item.title }}</h3>
+                <div style="color: #a5b4fc; margin-bottom: 10px;">
+                  <span>Reviewed on {{ review.created_at|date:"M d, Y H:i" }}</span>
+                  <div style="margin-top: 5px;">
+                    Rating: 
+                    {% for i in "12345"|make_list %}
+                      {% if forloop.counter <= review.rating %}
+                        <span style="color: #fbbf24;">⭐</span>
+                      {% endif %}
+                    {% endfor %}
+                  </div>
+                </div>
+                <p style="color: #fff; margin: 0;">{{ review.text }}</p>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+
+      {% if borrowed_items %}
+        <div style="display: grid; gap: 15px;">
+          {% for entry in borrowed_items %}
+            <div style="background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1);">
+              <h3 style="color: #fff; margin: 0 0 10px 0;">{{ entry.item.title }}</h3>
+              <p style="color: #a5b4fc; margin: 0 0 15px 0;">Requested at {{ entry.requested_at|date:"M d, Y H:i" }}</p>
+
+              <div style="display: flex; gap: 10px;">
+                <form method="post" action="{% url 'return_borrowed_item' entry.id %}" style="margin: 0;">
+                  {% csrf_token %}
+                  <button type="submit" style="display: inline-block; padding: 8px 16px; background: linear-gradient(135deg, #f59e0b, #d97706); color: white; text-decoration: none; border-radius: 8px; font-weight: 600; border: none; cursor: pointer; transition: transform 0.2s;">
+                    📦 Return
+                  </button>
+                </form>
+
+                {% if entry.item.id in reviews_by_item %}
+                  <a href="{% url 'submit_review' entry.item.id %}" style="display: inline-block; padding: 8px 16px; background: linear-gradient(135deg, #6366f1, #4f46e5); color: white; text-decoration: none; border-radius: 8px; font-weight: 600; transition: transform 0.2s;">
+                    📝 Edit Review
+                  </a>
+                {% else %}
+                  <a href="{% url 'submit_review' entry.item.id %}" style="display: inline-block; padding: 8px 16px; background: linear-gradient(135deg, #10b981, #059669); color: white; text-decoration: none; border-radius: 8px; font-weight: 600; transition: transform 0.2s;">
+                    ⭐ Leave a Review
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p style="color: #a5b4fc; text-align: center;">You are not currently borrowing any items.</p>
+      {% endif %}
+    </div>
+
+    <div style="text-align: center;">
+      <a href="{% url 'home' %}" style="display: inline-block; padding: 12px 24px; background: rgba(255, 255, 255, 0.1); color: #fff; text-decoration: none; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.2); transition: all 0.3s;">
+        ← Back to Dashboard
+      </a>
+    </div>
+  {% else %}
+    <div style="background: rgba(239, 68, 68, 0.1); padding: 20px; border-radius: 8px; border: 1px solid rgba(239, 68, 68, 0.2); text-align: center;">
+      <p style="color: #ef4444; margin: 0;">{{ error_message }}</p>
+      <a href="{% url 'home' %}" style="display: inline-block; padding: 12px 24px; background: rgba(255, 255, 255, 0.1); color: #fff; text-decoration: none; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.2); margin-top: 15px; transition: all 0.3s;">
+        Go back to home
+      </a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

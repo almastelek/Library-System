@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Collection Access Requests{% endblock %}
+
+{% block content %}
+<div class="dashboard-container" style="max-width: 800px; margin: 50px auto; padding: 30px;">
+  <div style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border-radius: 12px; padding: 30px; margin-bottom: 30px; border: 1px solid rgba(255, 255, 255, 0.2);">
+    <h2 style="color: #fff; text-align: center; margin-bottom: 30px;">📥 Collection Access Requests</h2>
+
+    {% if requests %}
+      <div style="display: grid; gap: 15px;">
+        {% for req in requests %}
+          <div style="background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+              <div>
+                <h3 style="color: #fff; margin: 0 0 5px 0;">{{ req.collection.title }}</h3>
+                <p style="color: #a5b4fc; margin: 0;">Requested by: {{ req.user.get_full_name|default:req.user.username }}</p>
+              </div>
+              <span style="background: rgba(99, 102, 241, 0.2); color: #a5b4fc; padding: 4px 12px; border-radius: 12px; font-size: 0.9em;">
+                {{ req.get_status_display }}
+              </span>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div style="color: #a5b4fc;">
+                <p style="margin: 0;">Requested: {{ req.requested_at|date:"M d, Y H:i" }}</p>
+              </div>
+
+              {% if req.status == "pending" %}
+                <div style="display: flex; gap: 10px;">
+                  <a href="{% url 'approve_collection_access' req.id %}" style="display: inline-block; padding: 8px 16px; background: linear-gradient(135deg, #10b981, #059669); color: white; text-decoration: none; border-radius: 8px; font-weight: 600; transition: transform 0.2s;">
+                    ✅ Approve
+                  </a>
+                  <a href="{% url 'deny_collection_access' req.id %}" style="display: inline-block; padding: 8px 16px; background: linear-gradient(135deg, #ef4444, #dc2626); color: white; text-decoration: none; border-radius: 8px; font-weight: 600; transition: transform 0.2s;">
+                    ❌ Deny
+                  </a>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p style="color: #a5b4fc; text-align: center;">There are no collection access requests at this time.</p>
+    {% endif %}
+  </div>
+
+  <div style="text-align: center;">
+    <a href="{% url 'home' %}" style="display: inline-block; padding: 12px 24px; background: rgba(255, 255, 255, 0.1); color: #fff; text-decoration: none; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.2); transition: all 0.3s;">
+      ← Back to Dashboard
+    </a>
+  </div>
+</div>
+{% endblock %}
